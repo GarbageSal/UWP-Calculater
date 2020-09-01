@@ -1,0 +1,290 @@
+﻿<Page
+    x:Class="Calculator.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Calculator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#17000000" Opacity="1"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#30000000" Opacity="1"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <Style TargetType="Button" x:Key="ButtonStyleBase">
+                <Setter Property="Margin" Value="1"/>
+                <Setter Property="Background" Value="#66FFFFFF"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="ms-appx:///Assets/CalcMDL2.ttf#Calculator MDL2 Assets"/>
+            </Style>
+            <Style TargetType="Button" x:Key="NumberButtonStyle" BasedOn="{StaticResource ButtonStyleBase}">
+                <Setter Property="Background" Value="#CCFFFFFF"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+            </Style>
+            <Style TargetType="Button" x:Key="ExtOperatorsStyle" BasedOn="{StaticResource ButtonStyleBase}">
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Height="32">
+            <TextBlock VerticalAlignment="Center" Margin="12,0">
+                计算器
+            </TextBlock>
+        </StackPanel>
+
+        <Grid Margin="3,12,3,3" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Name="expressionViewer" Grid.ColumnSpan="4"
+                          VerticalScrollMode="Disabled"
+                          HorizontalScrollMode="Enabled"
+                          VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Hidden"
+                          ZoomMode="Disabled"
+                          IsHitTestVisible="True"
+                          AutomationProperties.AccessibilityView="Raw"
+                          Margin="9,6,9,0">
+                <StackPanel Name="expressionPanel"
+                            Height="32"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            SizeChanged="expressionPanel_SizeChanged"/>
+            </ScrollViewer>
+            <Border Name="resultsContainer"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="4"
+                    Margin="9,12,9,24"
+                    Height="62">
+                <TextBlock Name="resultsBlock"
+                           FontSize="46"
+                           HorizontalAlignment="Right"
+                           HorizontalTextAlignment="Right"
+                           VerticalAlignment="Center"
+                           SizeChanged="resultsBlock_SizeChanged"
+                           />
+            </Border>
+            <Button Name="openParenButton"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="openParenButton_Click">
+                (
+            </Button>
+            <Button Name="closeParenButton"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="closeParenButton_Click">
+                )
+            </Button>
+            <Button Name="clearEntryButton"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="clearEntryButton_Click">
+                CE
+            </Button>
+            <Button Name="clearButton"
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="clearButton_Click">
+                C
+            </Button>
+            <Button Name="logicalAndButton"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="logicalAndButton_Click">
+                &#38;&#38;
+            </Button>
+            <Button Name="logicalOrButton"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="logicalOrButton_Click">
+                ||
+            </Button>
+            <Button Name="logicalNotButton"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Style="{StaticResource ExtOperatorsStyle}"
+                    Click="logicalNotButton_Click">
+                !
+            </Button>
+            <Button Name="divideButton"
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Click="divideButton_Click">
+                &#xE94A;
+            </Button>
+            <Button Name="num7Button"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                7
+            </Button>
+            <Button Name="num8Button"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                8
+            </Button>
+            <Button Name="num9Button"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                9
+            </Button>
+            <Button Name="multiplyButton"
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Click="multiplyButton_Click">
+                &#xE947;
+            </Button>
+            <Button Name="num4Button"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                4
+            </Button>
+            <Button Name="num5Button"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                5
+            </Button>
+            <Button Name="num6Button"
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                6
+            </Button>
+            <Button Name="minusButton"
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Click="minusButton_Click">
+                &#xE949;
+            </Button>
+            <Button Name="num1Button"
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                1
+            </Button>
+
+            <Button Name="num2Button"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                2
+            </Button>
+            <Button Name="num3Button"
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                3
+            </Button>
+            <Button Name="plusButton"
+                    Grid.Row="6"
+                    Grid.Column="3"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Click="plusButton_Click">
+                &#xE948;
+            </Button>
+            <Button Name="negateButton"
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Background="#CCFFFFFF"
+                    Click="negateButton_Click">
+                &#xF898;
+            </Button>
+            <Button Name="num0Button"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Style="{StaticResource NumberButtonStyle}"
+                    Click="numButton_Click">
+                0
+            </Button>
+            <Button Name="backSpaceButton"
+                    Grid.Row="7"
+                    Grid.Column="2"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Background="#CCFFFFFF"
+                    Click="backSpaceButton_Click">
+                &#xE94F;
+            </Button>
+            <Button Name="equalButton"
+                    Grid.Row="7"
+                    Grid.Column="3"
+                    Style="{StaticResource ButtonStyleBase}"
+                    Click="equalButton_Click">
+                <Button.Background>
+                    <SolidColorBrush Color="#FF0078D7" Opacity="0.4"/>
+                </Button.Background>
+                <Button.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Light">
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7" Opacity="0.7"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#FF0078D7" Opacity="1"/>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                </Button.Resources>
+                &#xE94E;
+            </Button>
+
+        </Grid>
+
+    </Grid>
+</Page>
